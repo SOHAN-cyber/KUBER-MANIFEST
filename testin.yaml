@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  test
+  labels:
+    name:  nginx
+spec:
+  replicas: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name:  nginx
+    spec:
+      containers:
+      - image:  nginx
+        name:  nginx-container
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "55M"
+          limits:
+            cpu: "40m"
+            memory: "110M"
+        env:
+        - name:  SOHAN
+          value:  Intelligent       
+        ports:
+        - containerPort:  80
+          name:  my-name
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+        - name: data
+          emptyDir: {}
+      restartPolicy: Always
+
+---
+apiVersion: v1 
+kind: Service
+metadata:
+  name: service1
+spec:
+  selector:
+    name: nginx
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 9736
+      targetPort: 80
+      nodePort: 30016
+
+
+

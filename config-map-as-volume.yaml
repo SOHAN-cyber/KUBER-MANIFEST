@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-volume
+  namespace: default
+  labels:
+    name: vol-configmap
+spec:
+  replicas: 2
+  minReadySeconds: 30
+  selector: 
+    matchLabels:
+      name: vol-configmap
+  template:
+    metadata:
+      name: my-container
+      labels:
+        name: vol-configmap
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "400Mi"
+          limits:
+            cpu: "200m"
+            memory: "400Mi"
+      #This is where we calling the volumes inside a container to get mounted at /mypath folder
+        volumeMounts:
+          - name:  configmap-vol-1
+            mountPath:  "/mypath"
+            readOnly: true
+    #In the below step we are mounting configMap as a volumes inside a container
+      volumes:
+        - name:  configmap-vol-1
+          configMap:
+            name: map

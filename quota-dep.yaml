@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qe
+  namespace: quota-ns
+  labels:
+    quota: class
+spec:
+  replicas: 4
+  selector: 
+    matchLabels:
+      quota: class
+  template:
+    metadata:
+      name: container-template
+      labels:
+        quota: class 
+    spec:
+      containers:
+      - name: quota-container
+        image: nginx
+        imagePullPolicy: Always #IfNotPresent
+        resources:
+          requests:
+            cpu: "40m"
+            memory: "40Mi"
+          limits:
+            cpu: "40m"
+            memory: "40Mi"
+        ports:
+        - containerPort: 80
+      # priorityClassName: high    

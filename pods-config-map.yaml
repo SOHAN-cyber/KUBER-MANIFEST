@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-pod
+  namespace: default
+  labels:
+    app: "nginx"
+spec:
+  containers:
+  - name: map-container
+    image: "nginx"
+    resources:
+      limits:
+        cpu: 200m
+        memory: 260Mi
+      requests:
+        cpu: 100m
+        memory: 260Mi
+    env:
+    - name: test1
+      valueFrom:
+        configMapKeyRef:
+          name: map
+          key: sohan
+    - name: test2
+      valueFrom:
+        configMapKeyRef:
+          name: map
+          key: dogra
+    ports:
+    - containerPort:  80
+      name:  http
+    volumeMounts:
+    - name: custom
+      mountPath: "/config"
+      readOnly: true
+  volumes:
+    - name: custom
+      configMap:
+        name: map
+        items:
+         - key: "company"
+           path: "company"
+         - key: "family"
+           path: "family"

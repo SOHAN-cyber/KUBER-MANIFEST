@@ -1,0 +1,15 @@
+# Because this Service has no selector, the corresponding Endpoint object is not created automatically.
+# You can manually map the Service to the network address and port where it’s running,
+# by adding an Endpoint object manually:
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: customendpoint
+  namespace: default
+subsets:
+- addresses:
+  - ip: 192.168.11.92
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP

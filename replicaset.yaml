@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  replicas
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset-object
+  namespace: replicas
+  labels:
+    app: test
+spec:
+  replicas: 1
+  minReadySeconds: 3
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: nginx-container
+        image:  nginx
+        ports:
+        - containerPort: 80
+        env:
+        - name: NGX_VERSION
+          value: 1.16.2
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  loadbalancer-container
+  annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  namespace: replicas
+spec:
+  selector:
+    app:  test
+  type:  LoadBalancer 
+  ports:
+  - name: nginx-container
+    port: 8081
+    targetPort: 80
+    nodePort: 30019

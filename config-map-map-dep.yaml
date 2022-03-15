@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: map
+  namespace: default
+  labels: 
+    name: map
+spec:
+  minReadySeconds: 5
+  replicas: 2
+  selector:
+    matchLabels:
+      name: map
+  template:
+    metadata:
+      name: test-container
+      labels:
+        name: map
+    spec:
+      containers:
+      - name: configmap
+        image: nginx
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "400Mi"
+          limits:
+            cpu: "200m"
+            memory: "400Mi"
+        env:
+          - name: test1
+            valueFrom:
+              configMapKeyRef:
+                name: map
+                key: sohan
+          - name: test2
+            valueFrom:
+              configMapKeyRef:
+                name: map
+                key: dogra
+        volumeMounts:
+          - name: custom
+            mountPath: "/config"
+            readOnly: true
+      volumes:
+        - name: custom
+          configMap:
+            name: map
+            items:
+              - key: "company"
+                path: "company"
+              - key: "family"
+                path: "family"

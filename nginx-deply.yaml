@@ -1,0 +1,87 @@
+
+---
+#This is configMap example
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello
+  namespace: meta
+
+data:
+  mydata: hello_world
+  sohan: Intelligent
+  exception: angry
+  date: 16/02/2001
+
+
+---
+#This is secret type example
+apiVersion: v1
+kind: Secret 
+metadata:
+  name:  key
+type: Opaque
+data:
+  password: cGFzc0AxMjMg 
+---
+#This is Deployment example with replicas
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  meta
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: meta
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  strategy:
+    # type: recreate
+   type: RollingUpdate
+   rollingUpdate:
+     maxSurge: 75%
+     maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: mycontainer
+        image: nginx
+        resources:
+          requests:
+            memory: "200M"
+            cpu: "100m"
+          limits:
+            memory: "400M"
+            cpu: "200m"
+        livenessProbe:
+        
+
+
+
+---
+#This is service example
+kind: Service
+apiVersion: v1
+namespace: meta
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    app:  nginx 
+  type:  LoadBalancer
+  ports:
+  - name: nginx-deployment
+    port:  80
+    targetPort:  80
+    nodePort: 30007

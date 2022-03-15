@@ -1,0 +1,15 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+
+metadata:
+  name: eksctl-test
+  region: ap-south-1
+
+nodeGroups:
+  - name: ng-default
+    instanceType: t3.micro
+    minSize: 2
+    maxSize: 20
+    desiredCapacity: 3

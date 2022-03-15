@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: deployment
+metadata:
+  name: HugePages
+  namespace: Resource-quotas
+  labels:
+    name: Huge
+spec:
+  MinreadySeconds: 3
+  replicas: 3
+  selector:
+    name: Huge
+  template:
+    metadata:
+      name: create-container
+      matchLabels:
+        name: Huge
+    spec:
+      containers:
+        - containers:
+          - name: nginx-container
+            image: nodejs
+            resources:
+              requests:
+                cpu: "200m"
+                memory: "400Mi"
+                hugepages-3Mi: "100Mi"
+                hugepages-500Mi: "350Mi"
+            ports:
+            - containerPort: 80
+      volumes:
+        - name:  hugepage-2mi
+          emptyDir:
+            medium: HugePages-2Mi
+            

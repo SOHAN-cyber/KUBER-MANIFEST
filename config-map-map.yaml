@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: map
+  labels:
+    app: myapplication
+data:
+# property-like keys; each key maps to a simple value
+  sohan: "intelligent"
+  dogra: "caste"
+
+# file-like keys
+  company: |
+    mojo=mobi
+    opstree=client
+    
+  family: |
+    ritu=sister
+    sahil=brother
+

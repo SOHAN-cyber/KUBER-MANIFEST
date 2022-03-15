@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taint-tolerations
+  namespace: default
+  
+spec:
+  selector:
+    matchLabels:
+      mobi: mojo
+  replicas: 2
+  template:
+    metadata:
+      name: cont
+      labels:
+        mobi: mojo
+    spec:
+      containers:
+      - name: own
+        image: nginx
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "20M"
+          limits:
+            cpu: "40m"
+            memory: "400M"
+        ports:
+        - containerPort: 80
+      # tolerations:
+      #   - key: mobi
+      #     operator: Exists
+      #     effect: NoSchedule
+
+      # tolerations:
+      #   - key: mobi
+      #     operator: In
+      #     value: mojo
+      #     effect: NoSchedule
+
+      tolerations:
+        - key: mobi
+          operator: Equal
+          value: mojo
+          effect: NoExecute
+          tolerationSeconds: 60
+            
+
