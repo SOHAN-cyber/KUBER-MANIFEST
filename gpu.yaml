@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            nvidia.com/gpu: 1
+            nvidia.com/gpu: 1    #amd.com/gpu: 1
           requests:
             nvidia.com/gpu: 1
         ports:
