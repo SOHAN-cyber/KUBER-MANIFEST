@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: deployment
+metadata:
+  name: gpu-scheduling-1
+  namespace: default
+  labels:
+    gpu: true
+spec:
+  replicas: 1
+  minReadySeconds: 60
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: gpu-container
+      labels:
+        gpu: true
+    spec:
+      containers:
+      - name: gpu-container
+        image: tensorflow/tensorflow:latest-gpu
+        imagePullPolicy: Always
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+          requests:
+            nvidia.com/gpu: 1
+        ports:
+        - containerPort: 8888
+        env:
+          - name: SOHAN
+            value: DOGRA
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: Instance
+                operator: In
+                values:
+                - gpu
